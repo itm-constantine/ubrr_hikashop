@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="2.5" method="upgrade" group="hikashoppayment">
+	<name>UBRR Payment Plugin for Hikashop</name>
+	<creationDate>Jule 2015</creationDate>
+	<version>0.0.1</version>
+	<author>itmosfera.ru</author>
+	<authorEmail>info@itmosfera.ru</authorEmail>
+	<authorUrl>http://www.itmosfera.ru</authorUrl>
+	<copyright>(C) itmosfera.ru</copyright>
+	<description>Платежный модуль Уральского банка реконструкции</description>
+	<files>
+		<filename plugin="ubrir">ubrir.php</filename>
+		<filename>UbrirClass.php</filename>
+		<filename>catcher.php</filename>
+		<filename>index.html</filename>
+		<filename>ubrir.tpl</filename>
+		<filename>ubrir.xml</filename>
+		<filename>ubrir_configuration.php</filename>
+		<filename>ubrir_end.php</filename>
+		<filename>certs/ubrir.crt</filename>
+	</files>
+	<params addpath="/components/com_hikashop/params">
+		<param name="pluginoptions" type="pluginoptions" default="plugin" label="hikashop" description="HikaShop options" />
+	</params>
+	<config>
+		<fields name="params" addfieldpath="/components/com_hikashop/fields">
+			<fieldset name="basic">
+				<field id="pluginoptions" name="pluginoptions" type="pluginoptions" label="hikashop" description="HikaShop options" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>
