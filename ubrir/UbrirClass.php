@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * @package HikaShop payment module for Joomla!
+ * @version 1.0.0
+ * @author  itmosfera.ru
+ * @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ */
+if(false) {
+  defined('_JEXEC') or die('Restricted access'); 
+}
 class Ubrir {
 
   const STATUS_CANCELED = 'CANCELED';
@@ -174,35 +182,6 @@ class Ubrir {
 		 return $this->xml_extract_uni_journal($curl_answer);
   }
 	
-	public function create_file($url) {	
-		$fp = fopen($_SERVER["DOCUMENT_ROOT"]."/ubrir/bank".$this->order_id.".php", "w");   // создаем обработчик
-		fwrite($fp, '<?php	
-		require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
-		$shop_order = '.$this->order_id.';
-		$sid = '.$this->shopId.';
-		if (isset($_POST["xmlmsg"])) {
-		$url = "'.$url.'";
-		$order = '.$this->twpg_order_id.';
-		$session = "'.$this->twpg_session_id.'";
-		if(stripos($url, "?")) $amp = "&"; else $amp = "?";
-		if(stripos($_POST["xmlmsg"], "CANCELED") != false)  header("Location: ".$url.$amp."status=CANCELED");
-		else {
-			
-		  $xml_string = base64_decode($_POST["xmlmsg"]);
-		  $parse_it = simplexml_load_string($xml_string);
-		   
-		  if ($parse_it->OrderStatus[0]=="DECLINED" OR $parse_it->OrderStatus[0]=="APPROVED") header("Location: ".$url.$amp."status=".$parse_it->OrderStatus[0]);
-		 
-		};
-		};
-		if(isset($_GET["ORDER_IDP"])) {
-			header("Location: http://".$_SERVER["HTTP_HOST"]."/personal/order/make/?ORDER_ID=".$shop_order."&status=".$_GET["status"]);
-		};
-		require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");
-		?>');
-		fclose($fp);
-  }
-	
 	/* ------------------ вспомогательные -------------------- */
 	protected function xml_extract_result($xml_string) {
 			$parse_it = simplexml_load_string($xml_string);
@@ -214,9 +193,11 @@ class Ubrir {
 					return $parse_it->Response->Order;
 					break;
 				  };
-					
-				case '30';
-					throw new UbrirException(sprintf('Неверные данные или заполнены не все поля'));
+				case '10':
+                            return $response_status;
+                            break;	
+				case '30':
+					return 'Неверные данные или заполнены не все поля';
 					break;
 					
 				default:
@@ -611,7 +592,7 @@ class Ubrir {
 
   protected function send_xml($xml) {
     
-		$ch = curl_init("https://91.208.121.201:7443/Exec");    // initialize curl handle
+		$ch = curl_init("https://twpg.ubrr.ru:8443/Exec");    // initialize curl handle
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).DIRECTORY_SEPARATOR."certs".DIRECTORY_SEPARATOR."ubrir.crt");
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
@@ -624,8 +605,8 @@ class Ubrir {
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		// curl_setopt($ch, CURLOPT_STDERR, $stdout);
 		if( ! $answer = curl_exec($ch)) { 
-              echo "Ошибка соединения с банком (".curl_errno($uni_ch).")";
-              die;
+            	echo  "Ошибка соединения с банком (".curl_errno($ch).")";
+                die;
 		} 
 		curl_close($ch);
 			

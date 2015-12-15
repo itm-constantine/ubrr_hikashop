@@ -1,10 +1,16 @@
 <?php
+/**
+ * @package	HikaShop payment module for Joomla!
+ * @version	1.0.0
+ * @author	itmosfera.ru
+ * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ */
 defined('_JEXEC') or die('Restricted access');
 
 require(dirname(__FILE__).'/UbrirClass.php');
 class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 
-	var $accepted_currencies = array('RUR',	'RUB');
+	// var $accepted_currencies = array('RUR','RUB','руб');
 
 	var $multiple = true;
 	var $name = 'ubrir';
@@ -48,17 +54,17 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 				'decline_url' => $url
 		 	)); 
 		$response_order = $bankHandler->prepare_to_pay(); // что вернул банк 
-
-		if(!empty($response_order)) {	
-		$db = JFactory::getDBO();
-		$sql = " INSERT INTO #__twpg_orders  
-		(`shoporderid`, `OrderID`, `SessionID`) 
-		VALUES  
-		('".$order->order_number."', '".$response_order->OrderID[0]."', '".$response_order->SessionID[0]."') ";
-		$db->setQuery($sql);
-		if(!$db->query()) exit('error_1101'); 
+		if(!empty($response_order) & $response_order =='00') {	
+			$db = JFactory::getDBO();
+			$sql = " INSERT INTO #__twpg_orders  
+			(`shoporderid`, `OrderID`, `SessionID`) 
+			VALUES  
+			('".$order->order_number."', '".$response_order->OrderID[0]."', '".$response_order->SessionID[0]."') ";
+			$db->setQuery($sql);
+			if(!$db->query()) exit('error_1101'); 
+		} else {
+			exit($response_order.' error_1102');
 		}
-		else exit('error_1102');
 		
 		$twpg_url = $response_order->URL[0].'?orderid='.$response_order->OrderID[0].'&sessionid='.$response_order->SessionID[0];
 		echo '<p>Данный заказ необходимо оплатить одним из методов, приведенных ниже: </p> <INPUT TYPE="button" value="Оплатить Visa" onclick="document.location = \''.$twpg_url.'\'">';
@@ -87,7 +93,7 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 
 	function onPaymentNotification(&$statuses) {
 		$db = JFactory::getDBO();
-		$getid = "SELECT `order_id` FROM `#__hikashop_order` WHERE order_number='".htmlspecialchars($_GET['order'])."'";
+		$getid = "SELECT `order_id` FROM `#__hikashop_order` WHERE order_number='".htmlspecialchars(JRequest::getVar('order'))."'";
 		$db->setQuery($getid);
 		if ($db->query()) {
 			$res = $db->loadResult();
@@ -101,15 +107,16 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 
 		//TWPG
 		// обрабатываем входные данные
-		if (isset($_POST['xmlmsg'])) {
+		$some_var = JRequest::getVar('xmlmsg');
+		if (isset($some_var)) {
 			// При CancelURL xmlmsg приходит не шифрованным
-			if (stripos($_POST["xmlmsg"], "CANCELED")) {
+			if (stripos(JRequest::getVar("xmlmsg"), "CANCELED")) {
 				echo  "<meta charset='utf-8'>";
 				echo "<h2>Оплата отменена <a href=".HIKASHOP_LIVE.">вернуться в магазин</a></h2>";
 			  die;
 			}
 			// извлечь статус и передать в чекстатус
-			$xml_string = base64_decode($_POST['xmlmsg']);
+			$xml_string = base64_decode(JRequest::getVar('xmlmsg'));
 			$parse_it = simplexml_load_string($xml_string);
 			// Дергаем статус заказа
 			$order_status = $parse_it->OrderStatus[0];
@@ -135,7 +142,7 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 				switch ($order_status) {
 				  case 'APPROVED':
 				    	//действие при удачной оплате
-				      $update_status = 'UPDATE `#__hikashop_order` SET `order_status`="confirmed" WHERE `order_number`= "'.trim($_GET['order']).'"';
+				      $update_status = 'UPDATE `#__hikashop_order` SET `order_status`="confirmed" WHERE `order_number`= "'.trim(JRequest::getVar('order')).'"';
 				      $db->setQuery($update_status);
 				      if($db->query()){
 				      	echo  "<meta charset='utf-8'>";
@@ -146,7 +153,8 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 				  case 'DECLINED':
 				  echo  "<meta charset='utf-8'>";
 					echo "<h2>Оплата отклонена банком <a href=".HIKASHOP_LIVE.">вернуться в магазин</a></h2>";
-					die;
+					echo $desc = (string)$parse_it->ResponseDescription;
+					die; 
 				  break;
 				}
 			}

@@ -1,9 +1,8 @@
 <?php
 /**
- * @package	HikaShop for Joomla!
- * @version	2.5.0
- * @author	hikashop.com
- * @copyright	(C) 2010-2015 HIKARI SOFTWARE. All rights reserved.
+ * @package	HikaShop payment module for Joomla!
+ * @version	1.0.0
+ * @author	itmosfera.ru
  * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 defined('_JEXEC') or die('Restricted access');

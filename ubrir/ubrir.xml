@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="2.5" method="upgrade" group="hikashoppayment">
-	<name>UBRR Payment Plugin for Hikashop</name>
+	<name>Платежный модуль УБРиР</name>
 	<creationDate>Jule 2015</creationDate>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<author>itmosfera.ru</author>
 	<authorEmail>info@itmosfera.ru</authorEmail>
 	<authorUrl>http://www.itmosfera.ru</authorUrl>
 	<copyright>(C) itmosfera.ru</copyright>
 	<description>Платежный модуль Уральского банка реконструкции</description>
+	<license>GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
 	<files>
 		<filename plugin="ubrir">ubrir.php</filename>
 		<filename>UbrirClass.php</filename>

@@ -1,7 +1,14 @@
 <?php 
-// берем входные данные и редиректим их на notify url
-// Из необходимого добавляем id заказа для uni
-// для twpg просто перекидываем xmlmsg на notifyurl
+/**
+ * @package	HikaShop payment module for Joomla!
+ * @version	1.0.0
+ * @author	itmosfera.ru
+ * @license	GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ */
+
+if(false) {
+	defined('_JEXEC') or die('Restricted access'); 
+}
 $domen = str_replace('/plugins/hikashoppayment/ubrir/catcher.php', '',$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 if (isset($_POST['xmlmsg'])) {
         echo '<form name="twpg" method="post" action="'.$domenindex.'/index.php?option=com_hikashop&ctrl=checkout&task=notify&notif_payment=ubrir&tmpl=component&lang=ru&order='.htmlspecialchars($_GET['id']).'">
