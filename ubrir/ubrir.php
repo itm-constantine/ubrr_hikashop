@@ -54,7 +54,7 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 				'decline_url' => $url
 		 	)); 
 		$response_order = $bankHandler->prepare_to_pay(); // что вернул банк 
-		if(!empty($response_order) & $response_order =='00') {	
+		if(!empty($response_order)) {	
 			$db = JFactory::getDBO();
 			$sql = " INSERT INTO #__twpg_orders  
 			(`shoporderid`, `OrderID`, `SessionID`) 
@@ -63,7 +63,19 @@ class plgHikashoppaymentUbrir extends hikashopPaymentPlugin {
 			$db->setQuery($sql);
 			if(!$db->query()) exit('error_1101'); 
 		} else {
-			exit($response_order.' error_1102');
+		    switch($response_order){
+		    	case(30):
+		    	echo 'Неверный формат сообщения';
+		    	break;
+		    	case(10):
+		    	echo 'ИМ не имеет доступа к этой операции';
+		    	break;
+		    	case(54):
+		    	case(96):
+			echo 'недопустимая операция';
+			break;	
+		    }
+			exit();
 		}
 		
 		$twpg_url = $response_order->URL[0].'?orderid='.$response_order->OrderID[0].'&sessionid='.$response_order->SessionID[0];

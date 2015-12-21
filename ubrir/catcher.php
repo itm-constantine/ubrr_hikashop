@@ -11,7 +11,7 @@ if(false) {
 }
 $domen = str_replace('/plugins/hikashoppayment/ubrir/catcher.php', '',$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 if (isset($_POST['xmlmsg'])) {
-        echo '<form name="twpg" method="post" action="'.$domenindex.'/index.php?option=com_hikashop&ctrl=checkout&task=notify&notif_payment=ubrir&tmpl=component&lang=ru&order='.htmlspecialchars($_GET['id']).'">
+        echo '<form name="twpg" method="post" action="/index.php?option=com_hikashop&ctrl=checkout&task=notify&notif_payment=ubrir&tmpl=component&lang=ru&order='.htmlspecialchars($_GET['id']).'">
         <input type="hidden" value="'.htmlspecialchars($_POST['xmlmsg']).'" name="xmlmsg" hidden>
         </form>
         <script>document.forms.twpg.submit()</script>';

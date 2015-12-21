@@ -358,7 +358,7 @@ class Ubrir {
     switch ($status) {
       case '00':
         $totals = $parse_it->Response->Totals;
-        $out .= '<div class="ubr_s">Успешно</div>';
+        $out = '<div class="ubr_s">Успешно</div>';
         $out .= '<p>Итоги совпали - '.$parse_it->Response->Reconcilation[0].'</p>';
         $out .= '<p>Дебит:</p><p>Количество операций: '.$totals->Debit->Count[0].'</p>';
         $out .= '<p>Общая сумма: '.number_format(((int)$totals->Debit->Amount[0])/100,2,'.','').'</p>';
@@ -366,22 +366,22 @@ class Ubrir {
         $out .= '<p>Общая сумма: '.number_format(((int)$totals->Credit->Amount[0])/100,2,'.','').'</p>';
         break;
       case '30':
-        $out .=  '<div class="ubr_f">Код:30 - Неверный формат запроса</div>';
+        $out =  '<div class="ubr_f">Код:30 - Неверный формат запроса</div>';
         break;
       case '95':
-        $out .=  '<div class="ubr_f">Код:95 - TWPG не позволяет провести данную операцию</div>';
+        $out =  '<div class="ubr_f">Код:95 - TWPG не позволяет провести данную операцию</div>';
         break;
       case '10':
-        $out .=  '<div class="ubr_f">Код:10 - ИМ не имеет доступа к этой операции</div>';
+        $out =  '<div class="ubr_f">Код:10 - ИМ не имеет доступа к этой операции</div>';
         break;    
       case '54':
-        $out .=  '<div class="ubr_f">Код:54 - Недопустимая операция</div>';
+        $out =  '<div class="ubr_f">Код:54 - Недопустимая операция</div>';
         break;    
       case '96':
-        $out .=  '<div class="ubr_f">Код:96 - Системная ошибка</div>';
+        $out =  '<div class="ubr_f">Код:96 - Системная ошибка</div>';
         break;              
       default:
-        $out .=  '<div class="ubr_f">Ошибка модуля</div>';
+        $out =  '<div class="ubr_f">Ошибка модуля</div>';
         break;
     }
 	  return $out;
@@ -466,7 +466,7 @@ class Ubrir {
     switch ($status) {
       case '00':
         $count = $parse_it->Response->Operations->Count[0];
-        $out .= '<div class="ubr_s">Операций в журнале:'.$count.'</div>';
+        $out = '<div class="ubr_s">Операций в журнале:'.$count.'</div>';
         $orders = $parse_it->Response->Operations->Order;
          $out .= '<table class="twpgdt" style="border: 1px dashed #999;">
             <tr>
