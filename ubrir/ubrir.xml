@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="plugin" version="2.5" method="upgrade" group="hikashoppayment">
-	<name>Платежный модуль УБРиР</name>
+	<name>UBRR Payment Plugin for Hikashop</name>
 	<creationDate>Jule 2015</creationDate>
 	<version>1.0.0</version>
 	<author>itmosfera.ru</author>
